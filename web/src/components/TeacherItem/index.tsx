@@ -3,33 +3,50 @@ import React from 'react';
 import whatsappIcon from '../../assets/images/icons/whatsapp.svg';
 
 import './styles.css'
+import api from '../../services/api';
 
-function TeacherItem() {
+export interface Teacher {
+    avatar: string,
+    bio: string,
+    cost: number,
+    id: number,
+    name: string,
+    subject: string,
+    whatsapp: string
+  
+}
+interface TeacherItemProps{
+  teacher: Teacher;
+}
+
+const TeacherItem: React.FC<TeacherItemProps> = ({ teacher }) => {
+
+  function createNewConnection(){
+    api.post('connections', {
+      user_id: teacher.id,
+    })
+  }
   return (
     <article className="teacher-item">
     <header>
-      <img src="https://scontent.fxap1-1.fna.fbcdn.net/v/t1.0-9/116265002_343934986598488_2492856771869200701_n.jpg?_nc_cat=107&_nc_sid=09cbfe&_nc_eui2=AeEEx3KlOBwqykM8v016Nj98ceqMj3Tw2GRx6oyPdPDYZLkMNSjZ3HQx3CLFp7tPf1IOwOTtlARW9yQ0pPlNljv_&_nc_ohc=cTBja8AkEtwAX9KNvps&_nc_ht=scontent.fxap1-1.fna&oh=6dc7c3a06319986bb883112c02d43a20&oe=5F4C7C3C" alt="Victor Hugo"/>
+      <img src={teacher.avatar} alt={teacher.name}/>
       <div>
-        <strong>Victor Hugo</strong>
-        <span>Química</span>
+        <strong>{teacher.name}</strong>
+        <span>{teacher.subject}</span>
       </div>
     </header>
 
-    <p>
-      Entusiasta das melhores tecnologias de química avançada.
-      <br /><br />  
-      Apaixonado por explodir cosias em laboratório e por mudar a vida das pessoas através de experiências.
-    </p>
+    <p>{teacher.bio}</p>
 
     <footer>
       <p>
         Preço/hora
-        <strong>R$ 80,00</strong>
+        <strong>R$ {teacher.cost}</strong>
       </p>
-      <button type="button">
+      <a target="_blank" onClick={createNewConnection} href={`https://wa.me/${teacher.whatsapp}`}>
         <img src={whatsappIcon} alt="Whatsapp"/>
         Entrar em contato
-      </button>
+      </a>
     </footer>
   </article>
   );
